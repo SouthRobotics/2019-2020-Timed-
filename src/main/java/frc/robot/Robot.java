@@ -7,9 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +29,28 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+
+  /**************Declaring Motors, Motor Groups, and Differential drive****************************** */
+  private PWMTalonSRX RMotor1;
+  private PWMTalonSRX RMotor2;
+  private PWMTalonSRX RMotor3;
+  private SpeedControllerGroup RightMotors;
+
+  private PWMTalonSRX LMotor1;
+  private PWMTalonSRX LMotor2;
+  private PWMTalonSRX LMotor3;
+  private SpeedControllerGroup LeftMotors;
+
+  
+  private DifferentialDrive dDrive;
+  /************************* OI ************************************************************************** */
+
+    Joystick RJoy;
+    Joystick LJoy;
+
+  /*********************************************************************************************************/
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -33,6 +60,25 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    //Instantiating talons and the Right motor group
+    RMotor1 = new PWMTalonSRX(0);
+    RMotor2 = new PWMTalonSRX(2);
+    RMotor3 = new PWMTalonSRX(1);
+    RightMotors = new SpeedControllerGroup(RMotor1, RMotor2, RMotor3);
+
+    //Instantiating talons and left motor group
+    LMotor1 = new PWMTalonSRX(14);
+    LMotor2 = new PWMTalonSRX(13);
+    LMotor3 = new PWMTalonSRX(15);
+    LeftMotors = new SpeedControllerGroup(LMotor1, LMotor2, LMotor3);
+
+    dDrive = new DifferentialDrive(LeftMotors, RightMotors);
+
+
+    //Making Joysticks
+    RJoy = new Joystick(0);
+    LJoy = new Joystick(1);
   }
 
   /**
@@ -86,6 +132,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    dDrive.tankDrive(LJoy.getRawAxis(1), RJoy.getRawAxis(1));
   }
 
   /**
