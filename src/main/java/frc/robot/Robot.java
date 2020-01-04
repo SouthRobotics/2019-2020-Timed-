@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,14 +31,14 @@ public class Robot extends TimedRobot {
 
 
   /**************Declaring Motors, Motor Groups, and Differential drive****************************** */
-  private PWMTalonSRX RMotor1;
-  private PWMTalonSRX RMotor2;
-  private PWMTalonSRX RMotor3;
+  private WPI_TalonSRX RMotor1;
+  private WPI_TalonSRX RMotor2;
+  private WPI_TalonSRX RMotor3;
   private SpeedControllerGroup RightMotors;
 
-  private PWMTalonSRX LMotor1;
-  private PWMTalonSRX LMotor2;
-  private PWMTalonSRX LMotor3;
+  private WPI_TalonSRX LMotor1;
+  private WPI_TalonSRX LMotor2;
+  private WPI_TalonSRX LMotor3;
   private SpeedControllerGroup LeftMotors;
 
   
@@ -62,15 +62,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     //Instantiating talons and the Right motor group
-    RMotor1 = new PWMTalonSRX(0);
-    RMotor2 = new PWMTalonSRX(2);
-    RMotor3 = new PWMTalonSRX(1);
+    RMotor1 = new WPI_TalonSRX(0);
+    RMotor2 = new WPI_TalonSRX(2);
+    RMotor3 = new WPI_TalonSRX(1);
     RightMotors = new SpeedControllerGroup(RMotor1, RMotor2, RMotor3);
 
     //Instantiating talons and left motor group
-    LMotor1 = new PWMTalonSRX(14);
-    LMotor2 = new PWMTalonSRX(13);
-    LMotor3 = new PWMTalonSRX(15);
+    LMotor1 = new WPI_TalonSRX(14);
+    LMotor2 = new WPI_TalonSRX(13);
+    LMotor3 = new WPI_TalonSRX(15);
     LeftMotors = new SpeedControllerGroup(LMotor1, LMotor2, LMotor3);
 
     dDrive = new DifferentialDrive(LeftMotors, RightMotors);
@@ -132,7 +132,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    dDrive.tankDrive(LJoy.getRawAxis(1), RJoy.getRawAxis(1));
+    double a = -1;
+    dDrive.tankDrive(LJoy.getRawAxis(1) * a, RJoy.getRawAxis(1) * a);
   }
 
   /**
