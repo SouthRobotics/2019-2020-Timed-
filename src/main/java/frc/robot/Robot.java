@@ -132,7 +132,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    double a = -1;
+    double a = -.75;
     dDrive.tankDrive(LJoy.getRawAxis(1) * a, RJoy.getRawAxis(1) * a);
   }
 
