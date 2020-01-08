@@ -23,16 +23,19 @@ public final class OI {
     // controlModes: 0-DualJoystickControl // 1-XboxGTADrive // 2-SingleJoyArcadeDrive
     private int controlMode;
     //class constructors
+    //constructor for joy
     public OI(int[] ports){
         for(int i=0; i<ports.length;i++){
             joyArray[i] = new Joystick(ports[i]);
     }
     controlMode = (ports.length > 1) ? 0:2;
     }
+    //constructor for gtadrive
     public OI(int port){
         xboxController = new XboxController(port);
         controlMode=1;
     }
+    //constructor for other modes
     public OI(int[] ports, int port, int mode){
         for(int i=0; i<ports.length;i++){
             joyArray[i] = new Joystick(ports[i]);
@@ -40,6 +43,7 @@ public final class OI {
         xboxController = new XboxController(port);
         controlMode = mode;
     }
+    //returns the left and right speed for driving based on current driving mode
     public double[] getSpeeds(){
         double[] speedsArray = new double[2];
         if(controlMode==0){
@@ -59,7 +63,7 @@ public final class OI {
                 speedsArray[0] += xboxController.getRawAxis(2);
             }
         }
-        if(controlMode==2){//arcade 0-throttle 1-rotation to be used w/ arcade drive
+        if(controlMode==2){//arcade 
             speedsArray[0] = joyArray[0].getX();
             speedsArray[1] = joyArray[0].getX();
             if (joyArray[0].getY()>1){
@@ -72,16 +76,19 @@ public final class OI {
         return speedsArray;
     }
 
-   
+   //returns the array of joystick objects
     public Joystick[] getJoysticks(){
         return joyArray;
     }
+    //returns the XboxController object
     public XboxController getXboxController(){
         return xboxController;
     }
+    //returns the current control mode
     public int getControlMode(){
         return controlMode;
     }
+    //returns if a certain button has been pressed (if more than one controller goes in order of intilaized joys)
     public boolean[] getButton(int button){
         int numofButs = (controlMode>0)?(controlMode==1)?1:1:joyArray.length;
         boolean[] butArray = new boolean[numofButs];
@@ -98,6 +105,7 @@ public final class OI {
         }
         return butArray;
     }
+    //get the raw axis of the joysticks depending on the driving mode
     public double[] getRawAxis(int axis){
         int numofaxis = (controlMode>0)?(controlMode==1)?3:2:joyArray.length;
         double[] axisarray = new double[numofaxis];
