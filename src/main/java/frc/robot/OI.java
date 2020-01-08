@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.;
+package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -39,11 +39,80 @@ public final class OI {
         }
         xboxController = new XboxController(port);
         controlMode = mode;
-    } 
-/**
-   * Main initialization function. Do not perform any initialization here.
-   *
-   * <p>If you change your main robot class, change the parameter type.
-   */
+    }
+    public double[] getSpeeds(){
+        double[] speedsArray = new double[2];
+        if(controlMode==0){
+           for(int i=0;i<2;i++){
+                speedsArray[i] = joyArray[i].getX();
+            }
+        }
+        if(controlMode==1){//gta 
+            speedsArray[0] = (xboxController.getRawAxis(3)>1)?
+                xboxController.getRawAxis(3):xboxController.getRawAxis(2);
+            speedsArray[1] = (xboxController.getRawAxis(3)>1)?
+                xboxController.getRawAxis(3):xboxController.getRawAxis(2);
+            if (xboxController.getRawAxis(2)>1){
+                speedsArray[1] -=xboxController.getRawAxis(2);
+            }
+            else if (xboxController.getRawAxis(2)<1){
+                speedsArray[0] += xboxController.getRawAxis(2);
+            }
+        }
+        if(controlMode==2){//arcade 0-throttle 1-rotation to be used w/ arcade drive
+            speedsArray[0] = joyArray[0].getX();
+            speedsArray[1] = joyArray[0].getX();
+            if (joyArray[0].getY()>1){
+                speedsArray[1] -=joyArray[0].getY();
+            }
+            else if (joyArray[0].getY()<1){
+                speedsArray[0] += joyArray[0].getY();
+            }
+        }
+        return speedsArray;
+    }
+
+   
+    public Joystick[] getJoysticks(){
+        return joyArray;
+    }
+    public XboxController getXboxController(){
+        return xboxController;
+    }
+    public int getControlMode(){
+        return controlMode;
+    }
+    public boolean[] getButton(int button){
+        int numofButs = (controlMode>0)?(controlMode==1)?1:1:joyArray.length;
+        boolean[] butArray = new boolean[numofButs];
+        if(controlMode==0){
+           for(int i=0;i<joyArray.length;i++){
+            butArray[i] = joyArray[i].getRawButton(button);
+            }
+        }
+        if(controlMode==1){
+            butArray[0] = xboxController.getRawButton(button);
+        }
+        if(controlMode==2){
+            butArray[0] = joyArray[0].getRawButton(button);
+        }
+        return butArray;
+    }
+    public double[] getRawAxis(int axis){
+        int numofaxis = (controlMode>0)?(controlMode==1)?3:2:joyArray.length;
+        double[] axisarray = new double[numofaxis];
+        if(controlMode==0){
+           for(int i=0;i<joyArray.length;i++){
+                axisarray[i] = joyArray[i].getRawAxis(axis);
+            }
+        }
+        if(controlMode==1){
+            axisarray[0] = xboxController.getRawAxis(axis);
+        }
+        if(controlMode==2){
+            axisarray[0] = joyArray[0].getRawAxis(axis);
+        }
+        return axisarray;
+    }
 
 }
