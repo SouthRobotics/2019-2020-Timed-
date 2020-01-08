@@ -3,7 +3,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 //NOTES:
 /*
+moveMotors() does not "Returns true or false if movement was successful" because it is void type
+Unsure about moveMotors() with no arguments "Uses whatever the mode is to move the motors." Is a simple tankDrive() ok?
 
+Should tankDrive and gtaDrive throw errors if in wrong mode??
+
+Many of these methods should "Return false if any errors", is a try-catch required?
+
+getMotorSpeed changed to double from double[], because it does not make sence
 */
 
 public class DriveTrain {
@@ -52,9 +59,44 @@ public class DriveTrain {
         //////////////////END OF MOTORS SETUP AND STUFF//////////////////////
     }
 
+    void moveMotors(){return moveMotors(OI.speedLeftThingy, OI.speedRightThingy, true);};
     void moveMotors(double leftSpeed, double rightSpeed, boolean speedMultiplier){
         //speed wil be multiplied by this.speedMultiplier if boolean speedMultiplier is true, otherwise, 1
         double speedMult = speedMultiplier ? this.speedMultiplier : 1;
         diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
     }
+    boolean tankDrive(){
+        if(THERE_IS_NOT_XBOX){
+            moveMotors();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    boolean gtaDrive(){
+        if(THERE_IS_NOT_XBOX){
+            return false;
+        }else{
+            moveMotors();
+            return true;
+        }
+    }
+    boolean arcadeDrive(){
+        if(ctrlMode != 2){
+            throw new Exception("Wrong mode for arcadeDrive. Mode (ctrlMode) is " + ctrlMode + " but expected 2");
+            return false;//unreachable code?? is it reachable after an Exception?
+        }
+        if(THERE_IS_NOT_XBOX){
+            moveMotors();
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    //danger - make sure index is right
+    double getMotorSpeed(int index){
+        return motors[index].get();
+    }
+
 }
