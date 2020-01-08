@@ -6,9 +6,16 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.Arduino;
+import edu.wpi.first.wpilibj.SerialPort;
 
 /**
  * Add your docs here.
  */
-public class ArduinoCommunitcation {
+public class ArduinoCommunication {
+
+    private long baud_rate;
+    private SerialPort serial;
+
+    
+
 }
