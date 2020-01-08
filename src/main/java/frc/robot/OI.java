@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
  * Unless you know what you are doing, do not modify this file except to
  * change the parameter class to the startRobot call.
  */
-public final class OI {
+public class OI {
     //private vals to be used in the class
     private Joystick[] joyArray;
     private XboxController xboxController;
@@ -52,25 +52,23 @@ public final class OI {
             }
         }
         if(controlMode==1){//gta 
-            speedsArray[0] = (xboxController.getRawAxis(3)>1)?
-                xboxController.getRawAxis(3):xboxController.getRawAxis(2);
-            speedsArray[1] = (xboxController.getRawAxis(3)>1)?
-                xboxController.getRawAxis(3):xboxController.getRawAxis(2);
-            if (xboxController.getRawAxis(2)>1){
-                speedsArray[1] -=xboxController.getRawAxis(2);
+            speedsArray[0] = xboxController.getRawAxis(3) - xboxController.getRawAxis(2);
+            speedsArray[1] = xboxController.getRawAxis(3) - xboxController.getRawAxis(2);
+            if (xboxController.getRawAxis(2)>0){
+                speedsArray[1] = speedsArray[1]*(1-xboxController.getRawAxis(2));
             }
-            else if (xboxController.getRawAxis(2)<1){
-                speedsArray[0] += xboxController.getRawAxis(2);
+            else if (xboxController.getRawAxis(2)<0){
+                speedsArray[0] = speedsArray[0]*(1+xboxController.getRawAxis(2));
             }
         }
         if(controlMode==2){//arcade 
             speedsArray[0] = joyArray[0].getX();
             speedsArray[1] = joyArray[0].getX();
-            if (joyArray[0].getY()>1){
-                speedsArray[1] -=joyArray[0].getY();
+            if (joyArray[0].getY()>0){
+                speedsArray[1] = speedsArray[1]*(1-joyArray[0].getX());
             }
-            else if (joyArray[0].getY()<1){
-                speedsArray[0] += joyArray[0].getY();
+            else if (joyArray[0].getY()<0){
+                speedsArray[0] = speedsArray[1]*(1+joyArray[0].getX());
             }
         }
         return speedsArray;
