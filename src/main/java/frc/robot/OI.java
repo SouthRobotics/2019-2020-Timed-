@@ -18,6 +18,14 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class OI {
     //private vals to be used in the class
+    private final int LEFT_X_AXIS = 0;
+    private final int LEFT_Y_AXIS = 1;
+    private final int L_TRIGGER = 2;
+    private final int R_TRIGGER = 3;
+    private final int RIGHT_X_AXIS = 4;
+    private final int RIGHT_Y_AXIS = 5;
+    private final int JOY_X = 0;
+    private final int JOY_Y = 1;
     private Joystick[] joyArray;
     private XboxController xboxController;
     // controlModes: 0-DualJoystickControl // 1-XboxGTADrive // 2-SingleJoyArcadeDrive
@@ -27,8 +35,8 @@ public class OI {
     public OI(int[] ports){
         for(int i=0; i<ports.length;i++){
             joyArray[i] = new Joystick(ports[i]);
-    }
-    controlMode = (ports.length > 1) ? 0:2;
+        }
+        controlMode = (ports.length > 1) ? 0:2;
     }
     //constructor for gtadrive
     public OI(int port){
@@ -47,28 +55,36 @@ public class OI {
     public double[] getSpeeds(){
         double[] speedsArray = new double[2];
         if(controlMode==0){
-           for(int i=0;i<2;i++){
-                speedsArray[i] = joyArray[i].getX();
+            if (joyArray[1].getRawButton(1)){
+                for(int i=0;i<speedsArray.length;i++){
+                    speedsArray[i] = joyArray[1].getRawAxis(JOY_X);
+                }
+            }
+            else{
+                for(int i=0;i<speedsArray.length;i++){
+                    
+                    speedsArray[i] = joyArray[i].getRawAxis(JOY_X);
+                }
             }
         }
         if(controlMode==1){//gta 
-            speedsArray[0] = xboxController.getRawAxis(3) - xboxController.getRawAxis(2);
-            speedsArray[1] = xboxController.getRawAxis(3) - xboxController.getRawAxis(2);
-            if (xboxController.getRawAxis(2)>0){
-                speedsArray[1] = speedsArray[1]*(1-xboxController.getRawAxis(2));
+            speedsArray[0] = xboxController.getRawAxis(R_TRIGGER) - xboxController.getRawAxis(L_TRIGGER);
+            speedsArray[1] = xboxController.getRawAxis(R_TRIGGER) - xboxController.getRawAxis(L_TRIGGER);
+            if (xboxController.getRawAxis(LEFT_Y_AXIS)>0){
+                speedsArray[1] = speedsArray[1]*(1-xboxController.getRawAxis(LEFT_Y_AXIS));
             }
-            else if (xboxController.getRawAxis(2)<0){
-                speedsArray[0] = speedsArray[0]*(1+xboxController.getRawAxis(2));
+            else if (xboxController.getRawAxis(LEFT_Y_AXIS)<0){
+                speedsArray[0] = speedsArray[0]*(1+xboxController.getRawAxis(LEFT_Y_AXIS));
             }
         }
         if(controlMode==2){//arcade 
-            speedsArray[0] = joyArray[0].getX();
-            speedsArray[1] = joyArray[0].getX();
-            if (joyArray[0].getY()>0){
-                speedsArray[1] = speedsArray[1]*(1-joyArray[0].getX());
+            speedsArray[0] = joyArray[0].getRawAxis(JOY_X);
+            speedsArray[1] = joyArray[0].getRawAxis(JOY_Y);
+            if (joyArray[0].getRawAxis(JOY_Y)>0){
+                speedsArray[1] = speedsArray[1]*(1-joyArray[0].getRawAxis(JOY_X));
             }
-            else if (joyArray[0].getY()<0){
-                speedsArray[0] = speedsArray[1]*(1+joyArray[0].getX());
+            else if (joyArray[0].getRawAxis(JOY_Y)<0){
+                speedsArray[0] = speedsArray[1]*(1+joyArray[0].getRawAxis(JOY_X));
             }
         }
         return speedsArray;
@@ -105,7 +121,7 @@ public class OI {
     }
     //get the raw axis of the joysticks depending on the driving mode
     public double[] getRawAxis(int axis){
-        int numofaxis = (controlMode>0)?(controlMode==1)?3:2:joyArray.length;
+        int numofaxis = (controlMode>0)?(controlMode==1)?1:1:joyArray.length;
         double[] axisarray = new double[numofaxis];
         if(controlMode==0){
            for(int i=0;i<joyArray.length;i++){
