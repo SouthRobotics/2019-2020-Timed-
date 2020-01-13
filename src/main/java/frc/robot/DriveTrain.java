@@ -84,51 +84,13 @@ public class DriveTrain {
     }
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
     boolean tankDrive(){return checkMode(0);}
-    //     try{
-    //         if(OI.getControlMode() == 0 && moveEnabled){
-    //             moveMotors();
-    //             return true;
-    //         }
-    //         else{
-    //             return false;
-    //         }
-    //     }catch(Exception e){//perhaps this should print to console
-    //         return false;
-    //     }
-    // }
 
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
     boolean gtaDrive(){return checkMode(1);}
-    //     try{
-    //         if(OI.getControlMode() == 1 && moveEnabled){
-    //             moveMotors();
-    //             return true;
-    //         }
-    //         else{
-    //             return false;
-    //         }
-    //     }catch(Exception e){//perhaps this should print to console
-    //         return false;
-    //     }
-        
-    // }
 
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
     boolean arcadeDrive(){return checkMode(2);}
-    //     try{
-    //         if(OI.getControlMode() == 2 && moveEnabled){
-    //             moveMotors();
-    //             return true;
-    //         }
-    //         else{
-    //             return false;
-    //         }
-    //     }catch(Exception e){//perhaps this should print to console
-    //         return false;
-    //     }
-        
-    // }
-
+    
     //////////////////END MOVEMENT/////////////////
     ////////////////GET////////////
     double getMotorSpeed(int index){return motors[index].get();}
