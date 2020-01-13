@@ -69,6 +69,7 @@ public class DriveTrain {
         double speedMult = speedMultiplier ? this.speedMultiplier : 1;
         diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
     }
+    //1 method to do all of tankDrive, gtaDrive, arcadeDrive
     boolean checkMode(int mode){
         try{
             if(OI.getControlMode() == mode && moveEnabled){
