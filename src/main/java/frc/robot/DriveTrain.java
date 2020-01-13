@@ -57,7 +57,10 @@ public class DriveTrain {
         //////////////////END OF MOTORS SETUP AND STUFF//////////////////////
     }
 
-    void moveMotors(){return moveMotors(OI.speedLeftThingy, OI.speedRightThingy, true);};
+    void moveMotors(){
+        int[] temp = input.getSpeeds();
+        return moveMotors(temp[0], temp[1], true);
+    };
     void moveMotors(double leftSpeed, double rightSpeed, boolean speedMultiplier){
         //speed wil be multiplied by this.speedMultiplier if boolean speedMultiplier is true, otherwise, 1
         if(!moveEnabled) return;
