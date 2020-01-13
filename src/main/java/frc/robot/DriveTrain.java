@@ -18,8 +18,7 @@ public class DriveTrain {
     public static final boolean SQUARE_SPEEDS = false;//should the speeds inputted into the tankDrive be squared? this may smoothen speed or something
     public static final int NUMBER_OF_SPEED_CONTROLLERS = 2;
 
-    public static int ctrlMode = 0;//Joysticks = 0, GTADrive = 1, ArcadeDrive = 2 WARNING!!! SET TO 0 BY DEFAULT IN CONSTRUCTOR
-
+    private int ctrlMode = 0;//Joysticks = 0, GTADrive = 1, ArcadeDrive = 2 WARNING!!! SET TO 0 BY DEFAULT
     private boolean moveEnabled = true;//can the drivetrain move at all? default is true
 
     private double speedMultiplier;
@@ -62,6 +61,7 @@ public class DriveTrain {
     void moveMotors(){return moveMotors(OI.speedLeftThingy, OI.speedRightThingy, true);};
     void moveMotors(double leftSpeed, double rightSpeed, boolean speedMultiplier){
         //speed wil be multiplied by this.speedMultiplier if boolean speedMultiplier is true, otherwise, 1
+        if(!moveEnabled) return;
         double speedMult = speedMultiplier ? this.speedMultiplier : 1;
         diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
     }
@@ -99,4 +99,9 @@ public class DriveTrain {
         return motors[index].get();
     }
 
+    double getLeftSpeed(){return speedControllers[0].get();}
+    double getRightSpeed(){return speedControllers[1].get();}
+
+    void setEnable(boolean enable){moveEnabled = enable;}
+    void setMode(int mode){ctrlMode = mode;}
 }
