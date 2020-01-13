@@ -20,7 +20,6 @@ public class DriveTrain {
 
     private int ctrlMode = 0;//Joysticks = 0, GTADrive = 1, ArcadeDrive = 2 WARNING!!! SET TO 0 BY DEFAULT
     private boolean moveEnabled = true;//can the drivetrain move at all? default is true
-
     private double speedMultiplier;
     private DifferentialDrive diffDrive;
     private OI input;
