@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import frc.robot.OI;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -134,8 +134,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double[] speeds = OI.getSpeeds();
-    dDrive.tankDrive(speeds[0], speeds[1]);
   }
 
   /**
