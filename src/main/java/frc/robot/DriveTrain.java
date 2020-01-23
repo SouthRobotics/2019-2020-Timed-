@@ -1,13 +1,13 @@
-
+/*
 public class DriveTrain {
     public static boolean SWAP_RIGHT_LEFT_WHEEL_SIDES = false;//in case left and right are wrong (swapped), change this
 
     private double speedMultiplier;
-    private DiffrentialDrive diffDrive;
+    private DifferentialDrive diffDrive;
     private OI input;
     private SpeedControllerGroup RSpeedCtrl;
     private SpeedControllerGroup LSpeedCtrl;
-    private Talon[] motors;
+    private WPI_TalonSRX[] motors;
 
     public DriveTrain(int[] leftMotors, int[] rightMotors, OI input, double speedMultiplier){
         this.LMotors = LMotors;
@@ -36,4 +36,4 @@ public class DriveTrain {
         
         diffDrive = new DiffrentialDrive(LSpeedCtrl, RSpeedCtrl);
     }
-}
+}*/
