@@ -9,12 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.PWMTalonSRX;
+//import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -130,10 +131,9 @@ public class Robot extends TimedRobot {
   /**
    * This function is called periodically during operator control.
    */
+
   @Override
   public void teleopPeriodic() {
-    double a = -.75;
-    dDrive.tankDrive(LJoy.getRawAxis(1) * a, RJoy.getRawAxis(1) * a);
   }
 
   /**
