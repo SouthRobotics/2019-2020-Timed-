@@ -1,4 +1,9 @@
+
+package frc.robot;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 //NOTES:
@@ -57,7 +62,7 @@ public class DriveTrain {
     
     //read OI (input) speeds and feed it into main moveMotors
     void moveMotors(){
-        int[] temp = input.getSpeeds();
+        double[] temp = input.getSpeeds();
         moveMotors(temp[0], temp[1], true);
     };
 
@@ -67,12 +72,15 @@ public class DriveTrain {
         if(!moveEnabled) 
             return;
         double speedMult = speedMultiplier ? this.speedMultiplier : 1;
-        diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
+        if(input.getControlMode() != 2)
+            diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
+        else
+            diffDrive.arcadeDrive(leftSpeed, rightSpeed, true);
     }
     //1 method to do all of tankDrive, gtaDrive, arcadeDrive
     boolean checkMode(int mode){
         try{
-            if(OI.getControlMode() == mode && moveEnabled){
+            if(input.getControlMode() == mode && moveEnabled){
                 moveMotors();
                 return true;
             }

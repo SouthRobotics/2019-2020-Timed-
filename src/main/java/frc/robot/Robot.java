@@ -7,20 +7,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Arduino.ArduinoCommunication;
-import frc.robot.Arduino.PixyCam;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -36,30 +27,10 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  private OI oi;
+  private DriveTrain driveTrain;
 
-  /**************Declaring Motors, Motor Groups, and Differential drive****************************** */
-  private WPI_TalonSRX RMotor1;
-  private WPI_TalonSRX RMotor2;
-  private WPI_TalonSRX RMotor3;
-  private SpeedControllerGroup RightMotors;
-
-  private WPI_TalonSRX LMotor1;
-  private WPI_TalonSRX LMotor2;
-  private WPI_TalonSRX LMotor3;
-  private SpeedControllerGroup LeftMotors;
-
-  
-  private DifferentialDrive dDrive;
-
-  /************************* OI ************************************************************************** */
-
-    Joystick RJoy;
-    Joystick LJoy;
-
-  /*********************************************************************************************************/
-
-    private PixyCam pixy;
-
+ //R 31,2,1   L 13,14,15
    // Compressor c;
     //DoubleSolenoid s = new DoubleSolenoid(0, 2);
 
@@ -73,35 +44,9 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    //Instantiating talons and the Right motor group
-    RMotor1 = new WPI_TalonSRX(31);
-    RMotor2 = new WPI_TalonSRX(2);
-    RMotor3 = new WPI_TalonSRX(1);
-    RightMotors = new SpeedControllerGroup(RMotor1, RMotor2, RMotor3);
-
-    //Instantiating talons and left motor group
-    LMotor1 = new WPI_TalonSRX(14);
-    LMotor2 = new WPI_TalonSRX(13);
-    LMotor3 = new WPI_TalonSRX(15);
-    LeftMotors = new SpeedControllerGroup(LMotor1, LMotor2, LMotor3);
-
-   // dDrive = new DifferentialDrive(LeftMotors, RightMotors);
-
-    //Making Joysticks
-    RJoy = new Joystick(0);
-    LJoy = new Joystick(1);
-
-    //pixy = new PixyCam(115200);
-
-    //c = new Compressor(0);
-  
-    //c.setClosedLoopControl(true);
-    //c.start();
-
-
-    //boolean enabled = c.enabled();
-    //boolean pressureSwitch = c.getPressureSwitchValue();
-    //double current = c.getCompressorCurrent();
+    oi = new OI(new int[]{0,1}, 0, 2);
+    driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,15}, oi, 1);
+    
   }
 
   /**
@@ -156,12 +101,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    double a = .6;
-    double b = 1-(RJoy.getRawAxis(3));
-    //dDrive.tankDrive(LJoy.getRawAxis(1) * a, RJoy.getRawAxis(1) * a);
-    RMotor1.set(-(1-LJoy.getRawAxis(3)) * a);
-    RMotor2.set((1-LJoy.getRawAxis(3)) * a/b);
-    RMotor3.set((1-LJoy.getRawAxis(3)) * a/b);
+    driveTrain.moveMotors();
   }
 
   /**
@@ -169,36 +109,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    /*
-    if(RJoy.getTrigger())
-    {
-      s.set(kReverse);
-      System.out.println("FORWARD");
-    }
-    else if(LJoy.getTrigger())
-    {
-      s.set(kForward);
-      System.out.println("REVERSE");
-    }
-    else
-      s.set(kOff);
 
-    if(RJoy.getRawAxis(3) < .5)
-      c.start();
-    else
-      c.stop();
-    */
-    if(RJoy.getTrigger())
-    {
-      double[] vals =  pixy.getBlocks();
-      if(vals[0] != -1)
-        dDrive.tankDrive((1-vals[2])*vals[0], (1-vals[2])*(1-vals[0]));
-      else
-        dDrive.tankDrive(0, 0);
-    }
-    else
-    {
-      dDrive.tankDrive(0, 0);
-    }
   }
 }
