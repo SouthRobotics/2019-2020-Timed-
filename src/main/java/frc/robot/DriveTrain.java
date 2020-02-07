@@ -3,7 +3,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 //NOTES:
@@ -90,6 +89,11 @@ public class DriveTrain {
         }catch(Exception e){//perhaps this should print to console
             return false;
         }
+    }
+
+    WPI_TalonSRX[] getMotors()
+    {
+        return motors;
     }
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
     boolean tankDrive(){return checkMode(0);}

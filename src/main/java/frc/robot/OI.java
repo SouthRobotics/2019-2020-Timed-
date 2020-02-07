@@ -17,17 +17,27 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class OI {
     //private vals to be used in the class
-    private final int LEFT_X_AXIS = 0;
-    private final int LEFT_Y_AXIS = 1;
-    private final int L_TRIGGER = 2;
-    private final int R_TRIGGER = 3;
-    private final int RIGHT_X_AXIS = 4;
-    private final int RIGHT_Y_AXIS = 5;
-    private final int JOY_X = 0;
-    private final int JOY_Y = 1;
+    public static int XBox_LEFT_X_AXIS = 0;
+    public static final int XBox_LEFT_Y_AXIS = 1;
+    public static final int XBox_L_TRIGGER = 2;
+    public static final int XBox_R_TRIGGER = 3;
+    public static final int XBox_RIGHT_X_AXIS = 4;
+    public static final int XBox_RIGHT_Y_AXIS = 5;
+
+    public static final int JOY_X = 0;
+    public static final int JOY_Y = 1;
+
+    public static final int tankDrive = 0;
+    public static final int gtaDrive = 1;
+    public static final int arcadeDrive = 2;
+
     private Joystick[] joyArray;
     private XboxController xboxController;
+    /*
+**************
     // controlModes: 0-DualJoystickControl // 1-XboxGTADrive // 2-SingleJoyArcadeDrive
+**************
+    */
     private int controlMode;
     //class constructors
     //constructor for joy
@@ -73,13 +83,13 @@ public class OI {
             }
         }
         else if(controlMode==1){//gta 
-            speedsArray[0] = xboxController.getRawAxis(L_TRIGGER) - xboxController.getRawAxis(R_TRIGGER);
-            speedsArray[1] = xboxController.getRawAxis(L_TRIGGER) - xboxController.getRawAxis(R_TRIGGER);
-            if (xboxController.getRawAxis(LEFT_X_AXIS)>0){
-                speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(LEFT_X_AXIS));
+            speedsArray[0] = xboxController.getRawAxis(XBox_L_TRIGGER) - xboxController.getRawAxis(XBox_R_TRIGGER);
+            speedsArray[1] = xboxController.getRawAxis(XBox_L_TRIGGER) - xboxController.getRawAxis(XBox_R_TRIGGER);
+            if (xboxController.getRawAxis(XBox_LEFT_X_AXIS)>0){
+                speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(XBox_LEFT_X_AXIS));
             }
-            else if (xboxController.getRawAxis(LEFT_X_AXIS)<0){
-                speedsArray[1] = speedsArray[0]*(1+xboxController.getRawAxis(LEFT_X_AXIS));
+            else if (xboxController.getRawAxis(XBox_LEFT_X_AXIS)<0){
+                speedsArray[1] = speedsArray[0]*(1+xboxController.getRawAxis(XBox_LEFT_X_AXIS));
             }
         }
         else if(controlMode==2){//arcade 
