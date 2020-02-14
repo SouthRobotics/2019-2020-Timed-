@@ -7,11 +7,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Arduino.ArduinoCommunication;
 import frc.robot.Arduino.PixyCam;
 
 //import com.ctre.phoenix.sensors.CANCoder;
@@ -33,14 +31,9 @@ public class Robot extends TimedRobot {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private boolean enabled = false;
   private boolean camera = false;
 
   private PixyCam pixy;
-
-  PWM r = new PWM(7);
-  PWM g = new PWM(8);
-  PWM b = new PWM(9);
   //CANCoder e = new CANCoder(15);
 
  //R 31,2,1   L 13,14,15
@@ -57,8 +50,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    oi = new OI(new int[]{0,1}, 0, OI.arcadeDrive);
-    driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,15}, oi, .5);
+    oi = new OI(new int[]{0,1}, 0, OI.tankDrive);
+    driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,12}, oi, 1);
     
     pixy = new PixyCam(9600, 0, 1);
   }
@@ -123,36 +116,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-      double max = .25;
-      double value = ArduinoCommunication.map(oi.getRawAxis(OI.JOY_Y)[0], -1, 1, 0, 255);
+    if(camera)
+      pixy.followObjectPeriodic(true);
+    else
+      pixy.setServos(-oi.getJoysticks()[1].getRawAxis(OI.JOY_X), -oi.getJoysticks()[1].getRawAxis(OI.JOY_Y));
 
-      r.setRaw((int)(value));
-      //oi.getRawAxis(OI.JOY_Y)[0]
-      if(oi.getJoysticks()[0].getTriggerReleased())
-        enabled = !enabled;
-      
-      if(oi.getJoysticks()[0].getRawButtonReleased(2))
-        camera = !camera;
-        
-
-      if(enabled)
-      {
-        driveTrain.getMotors()[1].set(-max);
-        driveTrain.getMotors()[2].set(max);
-      }
-      else
-      {
-        driveTrain.getMotors()[1].set(0);
-        driveTrain.getMotors()[2].set(0);
-      }
-
-      if(!camera)
-      {
-        pixy.followObjectPeriodic(true);
-      }
-      else
-      {
-        pixy.setServos(-oi.getJoysticks()[0].getRawAxis(OI.JOY_X), -oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
-      }
+    if(oi.getJoysticks()[1].getRawButtonReleased(2))
+    {
+      System.out.println("hi");
+      camera = !camera;
+    }
   }
 }
