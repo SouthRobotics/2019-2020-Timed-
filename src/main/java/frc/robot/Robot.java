@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Arduino.PixyCam;
+import frc.robot.SpecificFunctions.*;
 
 //import com.ctre.phoenix.sensors.CANCoder;
 //import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -31,9 +32,13 @@ public class Robot extends TimedRobot {
 
   private OI oi;
   private DriveTrain driveTrain;
+  private Intake intake;
+  private Outtake outtake;
+
+
   private boolean camera = false;
 
-  private PixyCam pixy;
+  //private PixyCam pixy;
   //CANCoder e = new CANCoder(15);
  //R 31,2,1   L 13,14,15
    // Compressor c;
@@ -51,8 +56,10 @@ public class Robot extends TimedRobot {
 
     oi = new OI(new int[]{0,1}, 0, OI.tankDrive);
     driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,12}, oi, 1);
+    intake = new Intake(new int[]{3}, new int[]{5});
+  //  outtake = new Outtake(3, -.3, oi, 5, 0);
     
-    pixy = new PixyCam(9600, 0, 1);
+    //pixy = new PixyCam(9600, 0, 1);
   }
 
   /**
@@ -108,6 +115,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.moveMotors();
+    //outtake.outTakePeriodic();
+    intake.intakePeriodic();
   }
 
   /**
@@ -115,15 +124,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    if(camera)
-      pixy.followObjectPeriodic(true);
-    else
-      pixy.setServos(-oi.getJoysticks()[1].getRawAxis(OI.JOY_X), -oi.getJoysticks()[1].getRawAxis(OI.JOY_Y));
 
-    if(oi.getJoysticks()[1].getRawButtonReleased(2))
-    {
-      System.out.println("hi");
-      camera = !camera;
-    }
   }
 }

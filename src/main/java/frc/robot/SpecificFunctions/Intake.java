@@ -24,13 +24,14 @@ public class Intake {
     private WPI_TalonSRX[] intakeMotors, conveyerMotors;
     private double[] multipliers;
     private double multiplier;
-    private int timeOut;
+    private double timeOut;
     private double width, height;
 
     public static final double DEFAULT_MIN_HEIGHT = .5;
     public static final double DEFAULT_MIN_WIDTH = .5;
     public static final int DEFAULT_BAUD_RATE = 9600;
-    public static final int DEFAULT_TIMEOUT = 10;
+    public static final double DEFAULT_TIMEOUT = 2;
+    public static final double DEFAULT_MULTIPLIER = .3;
 
     /**
      * 
@@ -44,7 +45,7 @@ public class Intake {
      * @param minHeight The minimum height of a tracked object for the intake system to furn on, from 0 to 1
      */
 
-    public Intake(int[] intakePorts, int[] conveyerPorts, double[] motorMultipliers, double allMultiplier, int baudRate, int timerMax, double minWidth, double minHeight)
+    public Intake(int[] intakePorts, int[] conveyerPorts, double[] motorMultipliers, double allMultiplier, int baudRate, double timerMax, double minWidth, double minHeight)
     {
         pixy = new PixyCam(baudRate);
 
@@ -52,6 +53,8 @@ public class Intake {
         width = minWidth;
 
         multiplier = allMultiplier;
+
+        timeOut = timerMax;
 
         intakeMotors = new WPI_TalonSRX[intakePorts.length];
         for(int i = 0; i < intakePorts.length; i++)
@@ -61,8 +64,14 @@ public class Intake {
         for(int i = 0; i < conveyerPorts.length; i++)
             conveyerMotors[i] = new WPI_TalonSRX(conveyerPorts[i]);
 
-        for(int i = 0; i < motorMultipliers.length; i++)
-            multipliers[i] = motorMultipliers[i] * multiplier;
+        if(motorMultipliers != null)
+        {
+            multipliers = new double[motorMultipliers.length];
+            for(int i = 0; i < motorMultipliers.length; i++)
+                multipliers[i] = motorMultipliers[i] * multiplier;
+        }
+
+        timer = new Timer();
     }
 
     /**
@@ -101,14 +110,11 @@ public class Intake {
      * 
      * @param intakePorts All of the ports of the Talon SRXs the motors on the intake are hooked up to
      * @param conveyerPorts All of the ports the Talon SRXs the motors for the conveyer system are hooked up to
-     * @param multiplier Multiplier for all of the motors
-     * @param minWidth The minimum width of a tracked object for the intake system to turn on, from 0 to 1
-     * @param minHeight The minimum height of a tracked object for the intake system to furn on, from 0 to 1
      */
 
     public Intake(int[] intakePorts, int[] conveyerPorts)
     {
-        this(intakePorts, conveyerPorts, new double[intakePorts.length + conveyerPorts.length], 1, Intake.DEFAULT_BAUD_RATE, Intake.DEFAULT_TIMEOUT, Intake.DEFAULT_MIN_WIDTH, Intake.DEFAULT_MIN_HEIGHT);
+        this(intakePorts, conveyerPorts, new double[intakePorts.length + conveyerPorts.length], Intake.DEFAULT_MULTIPLIER, Intake.DEFAULT_BAUD_RATE, Intake.DEFAULT_TIMEOUT, Intake.DEFAULT_MIN_WIDTH, Intake.DEFAULT_MIN_HEIGHT);
 
         for(int i = 0; i < multipliers.length; i++)
             multipliers[i] = 1;

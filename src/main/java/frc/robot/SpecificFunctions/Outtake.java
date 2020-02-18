@@ -65,6 +65,9 @@ public class Outtake {
             return true;
         }
         else
+        {
+            motor.set(0);
             return false;
+        }
     }
 }
