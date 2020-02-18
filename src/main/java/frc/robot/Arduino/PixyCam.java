@@ -36,6 +36,13 @@ public class PixyCam {
         tilt = null;
     }
 
+    /** 
+    * @param parameter The parameter.
+    
+    * @return What the method returns.
+    * 
+    */
+
     public PixyCam(int baud)
     {
         arduino = new ArduinoCommunication(baud, Port.kUSB1);
@@ -117,7 +124,7 @@ public class PixyCam {
         if(pan == null || tilt == null)
             return;
         
-        double[] temp =  getBlocks();
+        getBlocks();
 
         if(resetPos && !isObjectFound())
             setServos(0, 0);
@@ -140,7 +147,7 @@ public class PixyCam {
         if(pan == null || tilt == null)
             return;
         
-        double[] temp =  getBlocks();
+        getBlocks();
 
         if(!isObjectFound())
             setServos(resetX, resetY);

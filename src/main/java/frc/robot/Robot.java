@@ -35,7 +35,6 @@ public class Robot extends TimedRobot {
 
   private PixyCam pixy;
   //CANCoder e = new CANCoder(15);
-
  //R 31,2,1   L 13,14,15
    // Compressor c;
     //DoubleSolenoid s = new DoubleSolenoid(0, 2);
