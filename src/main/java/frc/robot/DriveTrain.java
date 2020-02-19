@@ -20,6 +20,13 @@ public class DriveTrain {
     private SpeedControllerGroup[] speedControllers;//even = left, odd = right
     private WPI_TalonSRX[] motors;//first ones are left, then right IF NOT SWAPPED
 
+    /** 
+    * @param leftMotors The array of ports of all the left-side motors for driving on the robot
+    * @param rightMotors The array of ports of all the right-side motors for driving on the robot
+    * @param OI Reference to the OI class. This is required so that the DriveTrain's move methods know the input (OI.getSpeeds())
+    * @param speedMultiplier A multiplier to the speed of all driving done by this DriveTrain. This can be ignored by calling moveMorors(--, --, false);
+    * @return Returns a new instance of the DriveTrain class
+    */
     public DriveTrain(int[] leftMotors, int[] rightMotors, OI input, double speedMultiplier){
         this.input = input;
         this.speedMultiplier = speedMultiplier;
@@ -53,15 +60,25 @@ public class DriveTrain {
     }
 
     //////////////MOVEMENT////////////////
-    //Joysticks = 0, GTADrive = 1, ArcadeDrive = 2 WARNING!!! SET TO 0 BY DEFAULT
+    //Modes: Joysticks = 0, GTADrive = 1, ArcadeDrive = 2 WARNING!!! SET TO 0 BY DEFAULT
     
     //read OI (input) speeds and feed it into main moveMotors
+    /** 
+     * Sets the motor speeds as long as moveEnabled == true. Uses the speedMultiplier of this DriveTrain and speeds from OI.
+     * <br><br>For greater control, use moveMotors(double leftSpeed, double rightSpeed, boolean speedMultiplier)
+    */
     void moveMotors(){
         int[] temp = input.getSpeeds();
         moveMotors(temp[0], temp[1], true);
     };
 
     //main moveMotors, sets the motors (using DiffrentialDrive) to speeds, can use global speed multiplier or not
+    /** 
+     * Sets the motor speeds as long as moveEnabled == true
+    * @param leftSpeed The speed of the left side
+    * @param rightSpeed The speed of the right side
+    * @param speedMultiplier Should the speedMultiplier of this DriveTrain be effective?
+    */
     void moveMotors(double leftSpeed, double rightSpeed, boolean speedMultiplier){
         //speed wil be multiplied by this.speedMultiplier if boolean speedMultiplier is true, otherwise, 1
         if(!moveEnabled) 
@@ -70,6 +87,14 @@ public class DriveTrain {
         diffDrive.tankDrive(leftSpeed * speedMult, rightSpeed * speedMult, SQUARE_SPEEDS);
     }
     //1 method to do all of tankDrive, gtaDrive, arcadeDrive
+    /** 
+     * Attempts to set the motor speeds according to the same driving mode and this DriveTrain's OI's input values
+     * <br><br>0 = Tank
+     * <br><br>1 = GTA
+     * <br><br>2 = Arcade
+    * @param leftMotors The array of ports of all the left-side motors for driving on the robot
+    * @return Returns true if the speed was set successfully. Causes for failure/false include OI's control mode was different. 
+    */
     boolean checkMode(int mode){
         try{
             if(OI.getControlMode() == mode && moveEnabled){
@@ -84,19 +109,71 @@ public class DriveTrain {
         }
     }
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
+    /** 
+     * Attempts to set the motor speeds according to the Tank driving mode and this DriveTrain's OI's input values
+    * @param leftMotors The array of ports of all the left-side motors for driving on the robot
+    * @return Returns true if the speed was set successfully. Causes for failure/false include OI's control mode was different. 
+    */
     boolean tankDrive(){return checkMode(0);}
 
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
+    /** 
+     * Attempts to set the motor speeds according to the GTA driving mode and this DriveTrain's OI's input values
+    * @param leftMotors The array of ports of all the left-side motors for driving on the robot
+    * @return Returns true if the speed was set successfully. Causes for failure/false include OI's control mode was different. 
+    */
     boolean gtaDrive(){return checkMode(1);}
 
     //basically moveMotors(); but checks if mode is right and returns if wrong mode or error
+    /** 
+     * Attempts to set the motor speeds according to the Arcade driving mode and this DriveTrain's OI's input values
+    * @param leftMotors The array of ports of all the left-side motors for driving on the robot
+    * @return Returns true if the speed was set successfully. Causes for failure/false include OI's control mode was different. 
+    */
     boolean arcadeDrive(){return checkMode(2);}
     
     //////////////////END MOVEMENT/////////////////
     ////////////////GET////////////
+    /** 
+    * @param index the inded in the private motors array
+    * @return Returns the speed of a motor (Talon) from the private motors array by index
+    */
     double getMotorSpeed(int index){return motors[index].get();}
+    /** 
+    * @return Returns the current speed of the left side
+    */
     double getLeftSpeed(){return speedControllers[0].get();}
+    /** 
+    * @return Returns the current speed of the right side
+    */
     double getRightSpeed(){return speedControllers[1].get();}
+    /** 
+    * @param index The index of the SpeedControllerGroup in the private array speedControllers
+    * @return Returns a SpeedGroupControllerGroup by index in the private speedControllers array
+    */
+    SpeedControllerGroup getSpeedControllerGroup(int index){ return speedControllers[index];}
+    /** 
+    * @return Returns the DriveTrain's private DifferentialDrive variable
+    */
+    DifferentialDrive getDifferentialDrive(){return diffDrive;}
+    /** 
+    * @param index the index in the private motors array
+    * @return Returns a motor (Talon) from the private motors array by index
+    */
+    WPI_TalonSRX getMotorByIndex(int index){return motors[index];};
+    /** 
+    * @param port The port that the Talon is connected to
+    * @return Returns a motor (Talon) with that port, from the private motors array. Prints a message if no motor with that port is in the private motors array
+    */
+    WPI_TalonSRX getMotorByPort(int port){
+        for(WPI_TalonSRX m : motors){ 
+            if(m.getDeviceID()==port) return m;
+        }
+        System.out.println("Attempted to get motor by port, but no motors in motors array have this port");
+    }
     ////////////////////SET/////////////////////
+    /** 
+    * @param enable Should this DriveTrain be enabled or not? Disabled will not execute any movement
+    */
     void setEnable(boolean enable){moveEnabled = enable;}
 }
