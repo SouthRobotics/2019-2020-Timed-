@@ -54,10 +54,10 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    oi = new OI(new int[]{0,1}, 0, OI.tankDrive);
+    oi = new OI(new int[]{0,1}, 0, OI.TANKDRIVE);
     driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,12}, oi, 1);
     intake = new Intake(new int[]{3}, new int[]{5});
-  //  outtake = new Outtake(3, -.3, oi, 5, 0);
+    outtake = new Outtake(3, -.3, oi, 5, 0);
     
     //pixy = new PixyCam(9600, 0, 1);
   }
@@ -115,8 +115,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.moveMotors();
+    //intake.intakePeriodic();
     //outtake.outTakePeriodic();
-    intake.intakePeriodic();
   }
 
   /**
