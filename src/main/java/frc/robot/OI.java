@@ -59,7 +59,9 @@ public class OI {
     public static final int gtaDrive = 1;
     public static final int arcadeDrive = 2;
     private int driveStraightButton = -100;
-    private int direction = 1;
+    private int driveStraightController = -1;
+    private int ForBackdirection = 1;
+    private int[] directionArray = {1,1};
     private Joystick[] joyArray;
     private XboxController xboxController;
 
@@ -78,9 +80,10 @@ public class OI {
 
     /**
      * @param ports the ports of each of the Joysticks
-     * @param button the button, that when pushed, makes sthe robot drive straight
+     * @param button the button, that when pushed, makes the robot drive straight
+     * @param controller the controller the afformentioned button is on
      */
-    public OI(int[] ports, int button){
+    public OI(int[] ports, int button, double controller){
 
         joyArray = new Joystick[ports.length];
 
@@ -89,6 +92,7 @@ public class OI {
         }
         controlMode = (ports.length > 1) ? 0:2;
         driveStraightButton = button;
+        driveStraightController = Integer.parseInt(Double.toString(controller));
     }
 
     /**
@@ -121,28 +125,22 @@ public class OI {
      */
     public double[] getSpeeds(){
         double[] speedsArray = new double[2];
-
         if(controlMode==0){ //Dual Joy
-            if (driveStraightButton != -100 && joyArray[0].getRawButton(driveStraightButton)){
+            if (driveStraightButton != -100 && driveStraightController != -1){
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[0].getRawAxis(JOY_Y)*direction;
-                }
-            }
-            else if (driveStraightButton != -100 && joyArray[1].getRawButton(driveStraightButton)){
-                for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[1].getRawAxis(JOY_Y)*direction;
+                    speedsArray[i] = joyArray[driveStraightController].getRawAxis(JOY_Y)*ForBackdirection*directionArray[i];
                 }
             }
             else{
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y)*direction;
+                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y)*ForBackdirection*directionArray[i];
                 }
             }
         }
 
         else if(controlMode==1){//gta 
-            speedsArray[0] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*direction;
-            speedsArray[1] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*direction;
+            speedsArray[0] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*ForBackdirection*directionArray[0];
+            speedsArray[1] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*ForBackdirection*directionArray[1];
             if (xboxController.getRawAxis(XBOX_LEFT_X_AXIS)>0){
                 speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(XBOX_LEFT_X_AXIS));
             }
@@ -152,7 +150,7 @@ public class OI {
         }
 
         else if(controlMode==2){//arcade 
-            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*direction;
+            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*ForBackdirection;
             speedsArray[1] = joyArray[0].getRawAxis(JOY_X);
         }
         return speedsArray;
@@ -183,7 +181,7 @@ public class OI {
      * @return Switches the driving direction of the robot
      */
     public void switchDirections() {
-        direction = direction*-1;
+        ForBackdirection = ForBackdirection*-1;
 
     }
 
@@ -191,24 +189,45 @@ public class OI {
      * @return returns the driving direction of the robot
      */
     public int getDirection() {
-        return direction;
+        return ForBackdirection;
+
+    }
+
+    /**
+     * @return Sets the driving direction (L-R) of the robot
+     */
+    public void setLRDirections(int[] dirs) {
+        for (int i=0;i<directionArray.length;i++){
+            directionArray[i] = dirs[i];
+        }
+
+    }
+
+    /**
+     * @return returns the driving (L-R) direction of the robot
+     */
+    public int[] getLRDirections() {
+        return directionArray;
 
     }
 
     /**
      * @param button the # of the button to set the DriveStraightButton to
+     * @param controller the controller the button is on
      * @return sets the driveStraightButton
      */
-    public void setDriveStraightButton(int button) {
+    public void setDriveStraightButton(int button, int controller) {
         driveStraightButton = button;
+        driveStraightController = controller;
 
     }    
     
     /**
-    * @return gets the DriveStraigh Button 
+    * @return gets the DriveStraigh Button and controller
     */
-    public int getDriveStraightButton() {
-        return driveStraightButton;
+    public int[] getDriveStraightButton() {
+        int[] temp = {driveStraightButton, driveStraightController};
+        return temp;
 
     }
 
