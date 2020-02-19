@@ -17,30 +17,55 @@ import edu.wpi.first.wpilibj.XboxController;
  */
 public class OI {
     //private vals to be used in the class
-    public static int XBox_LEFT_X_AXIS = 0;
-    public static final int XBox_LEFT_Y_AXIS = 1;
-    public static final int XBox_L_TRIGGER = 2;
-    public static final int XBox_R_TRIGGER = 3;
-    public static final int XBox_RIGHT_X_AXIS = 4;
-    public static final int XBox_RIGHT_Y_AXIS = 5;
-
+    public static final int XBOX_LEFT_X_AXIS = 0;
+    public static final int XBOX_LEFT_Y_AXIS = 1;
+    public static final int XBOX_RIGHT_X_AXIS = 4;
+    public static final int XBOX_RIGHT_Y_AXIS = 5;
+    public static final int XBOX_X_BUTTON = 1;
+    public static final int XBOX_A_BUTTON = 2;
+    public static final int XBOX_B_BUTTON = 3;
+    public static final int XBOX_Y_BUTTON = 4;
+    public static final int XBOX_LEFT_BUMPER = 5;
+    public static final int XBOX_RIGHT_BUMPER = 6;
+    public static final int XBOX_RIGHT_JOYSTICK_BUTTON = 10;
+    public static final int XBOX_LEFT_JOYSTICK_BUTTON = 9;
+    public static final int XBOX_VIEW = 7;
+    public static final int XBOX_MENU = 8;
+    public static final int XBOX_L_TRIGGER = 2;
+    public static final int XBOX_R_TRIGGER = 3;
+    
+    public static final int JOY_Button1 = 1;
+    public static final int JOY_Button2 = 2;
+    public static final int JOY_Button3 = 3;
+    public static final int JOY_Button4 = 4;
+    public static final int JOY_Button5 = 5;
+    public static final int JOY_Button6 = 6;
+    public static final int JOY_Button7 = 7;
+    public static final int JOY_Button8 = 8;
+    public static final int JOY_Button9 = 9;
+    public static final int JOY_Button10 = 10;
+    public static final int JOY_Button11 = 11;
+    public static final int JOY_Button12 = 12;
     public static final int JOY_X = 0;
     public static final int JOY_Y = 1;
 
-    public static final int tankDrive = 0;
-    public static final int gtaDrive = 1;
-    public static final int arcadeDrive = 2;
-
-    private Joystick[] joyArray;
-    private XboxController xboxController;
     /*
 **************
-    // controlModes: 0-DualJoystickControl // 1-XboxGTADrive // 2-SingleJoyArcadeDrive
+    // controlModes: 0-DualJoystickTankDrive // 1-XboxGTADrive // 2-SingleJoyArcadeDrive
 **************
     */
     private int controlMode;
-    //class constructors
-    //constructor for joy
+    public static final int tankDrive = 0;
+    public static final int gtaDrive = 1;
+    public static final int arcadeDrive = 2;
+    private int driveStraightButton = -100;
+    private int direction = 1;
+    private Joystick[] joyArray;
+    private XboxController xboxController;
+
+    /**
+     * @param ports the ports of each of the Joysticks
+     */
     public OI(int[] ports){
 
         joyArray = new Joystick[ports.length];
@@ -50,12 +75,35 @@ public class OI {
         }
         controlMode = (ports.length > 1) ? 0:2;
     }
-    //constructor for gtadrive
+
+    /**
+     * @param ports the ports of each of the Joysticks
+     * @param button the button, that when pushed, makes sthe robot drive straight
+     */
+    public OI(int[] ports, int button){
+
+        joyArray = new Joystick[ports.length];
+
+        for(int i=0; i<ports.length;i++){
+            joyArray[i] = new Joystick(ports[i]);
+        }
+        controlMode = (ports.length > 1) ? 0:2;
+        driveStraightButton = button;
+    }
+
+    /**
+     * @param port The Xbox Controller Port
+     */
     public OI(int port){
         xboxController = new XboxController(port);
         controlMode=1;
     }
-    //constructor for other modes
+
+    /**
+     * @param ports the ports of each of the Joysticks
+     * @param port The Xbox Controller Port
+     * @param mode the desired driving mode
+     */
     public OI(int[] ports, int port, int mode){
 
         joyArray = new Joystick[ports.length];
@@ -67,51 +115,108 @@ public class OI {
 
         controlMode = mode;
     }
-    //returns the left and right speed for driving based on current driving mode
+
+    /**
+     * @return Returns the left and right speed for driving based on current driving mode except for arcade which returns direction in [0] and rotation in [1]
+     */
     public double[] getSpeeds(){
         double[] speedsArray = new double[2];
-        if(controlMode==0){
-            if (joyArray[1].getRawButton(1)){
+
+        if(controlMode==0){ //Dual Joy
+            if (driveStraightButton != -100 && joyArray[0].getRawButton(driveStraightButton)){
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[1].getRawAxis(JOY_Y);
+                    speedsArray[i] = joyArray[0].getRawAxis(JOY_Y)*direction;
+                }
+            }
+            else if (driveStraightButton != -100 && joyArray[1].getRawButton(driveStraightButton)){
+                for(int i=0;i<speedsArray.length;i++){
+                    speedsArray[i] = joyArray[1].getRawAxis(JOY_Y)*direction;
                 }
             }
             else{
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y);
+                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y)*direction;
                 }
             }
         }
+
         else if(controlMode==1){//gta 
-            speedsArray[0] = xboxController.getRawAxis(XBox_L_TRIGGER) - xboxController.getRawAxis(XBox_R_TRIGGER);
-            speedsArray[1] = xboxController.getRawAxis(XBox_L_TRIGGER) - xboxController.getRawAxis(XBox_R_TRIGGER);
-            if (xboxController.getRawAxis(XBox_LEFT_X_AXIS)>0){
-                speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(XBox_LEFT_X_AXIS));
+            speedsArray[0] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*direction;
+            speedsArray[1] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*direction;
+            if (xboxController.getRawAxis(XBOX_LEFT_X_AXIS)>0){
+                speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(XBOX_LEFT_X_AXIS));
             }
-            else if (xboxController.getRawAxis(XBox_LEFT_X_AXIS)<0){
-                speedsArray[1] = speedsArray[0]*(1+xboxController.getRawAxis(XBox_LEFT_X_AXIS));
+            else if (xboxController.getRawAxis(XBOX_LEFT_X_AXIS)<0){
+                speedsArray[1] = speedsArray[0]*(1+xboxController.getRawAxis(XBOX_LEFT_X_AXIS));
             }
         }
+
         else if(controlMode==2){//arcade 
-            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y);
+            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*direction;
             speedsArray[1] = joyArray[0].getRawAxis(JOY_X);
         }
         return speedsArray;
     }
 
-   //returns the array of joystick objects
+    /**
+     * @return returns the array of joystick objects
+     */
     public Joystick[] getJoysticks(){
         return joyArray;
     }
-    //returns the XboxController object
+
+    /**
+     * @return returns the XboxController object
+     */
     public XboxController getXboxController(){
         return xboxController;
     }
-    //returns the current control mode
+
+    /**
+     * @return returns the current control mode
+     */
     public int getControlMode(){
         return controlMode;
     }
-    //returns if a certain button has been pressed (if more than one controller goes in order of intilaized joys)
+
+    /**
+     * @return Switches the driving direction of the robot
+     */
+    public void switchDirections() {
+        direction = direction*-1;
+
+    }
+
+    /**
+     * @return returns the driving direction of the robot
+     */
+    public int getDirection() {
+        return direction;
+
+    }
+
+    /**
+     * @param button the # of the button to set the DriveStraightButton to
+     * @return sets the driveStraightButton
+     */
+    public void setDriveStraightButton(int button) {
+        driveStraightButton = button;
+
+    }    
+    
+    /**
+    * @return gets the DriveStraigh Button 
+    */
+    public int getDriveStraightButton() {
+        return driveStraightButton;
+
+    }
+
+
+    /**
+     * @param button the # of the button to return
+    * @return returns if a certain button has been pressed (if more than one controller is present goes in order of intilaized joys)
+    */
     public boolean[] getButton(int button){
         int numofButs = (controlMode>0)?(controlMode==1)?1:1:joyArray.length;
         boolean[] butArray = new boolean[numofButs];
@@ -128,7 +233,11 @@ public class OI {
         }
         return butArray;
     }
-    //get the raw axis of the joysticks depending on the driving mode
+
+    /**
+     * @param axis the # of the axis to return
+    * @return get the raw axis of the joysticks depending on the driving mode
+    */
     public double[] getRawAxis(int axis){
         int numofaxis = (controlMode>0)?(controlMode==1)?1:1:joyArray.length;
         double[] axisarray = new double[numofaxis];
