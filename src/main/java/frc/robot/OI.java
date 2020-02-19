@@ -55,12 +55,12 @@ public class OI {
 **************
     */
     private int controlMode;
-    public static final int tankDrive = 0;
-    public static final int gtaDrive = 1;
-    public static final int arcadeDrive = 2;
+    public static final int TANKDRIVE = 0;
+    public static final int GTADRIVE = 1;
+    public static final int ARCADEDRIVE = 2;
     private int driveStraightButton = -100;
     private int driveStraightController = -1;
-    private int ForBackdirection = 1;
+    private int forBackdirection = 1;
     private int[] directionArray = {1,1};
     private Joystick[] joyArray;
     private XboxController xboxController;
@@ -128,19 +128,19 @@ public class OI {
         if(controlMode==0){ //Dual Joy
             if (driveStraightButton != -100 && driveStraightController != -1){
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[driveStraightController].getRawAxis(JOY_Y)*ForBackdirection*directionArray[i];
+                    speedsArray[i] = joyArray[driveStraightController].getRawAxis(JOY_Y)*forBackdirection*directionArray[i];
                 }
             }
             else{
                 for(int i=0;i<speedsArray.length;i++){
-                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y)*ForBackdirection*directionArray[i];
+                    speedsArray[i] = joyArray[i].getRawAxis(JOY_Y)*forBackdirection*directionArray[i];
                 }
             }
         }
 
         else if(controlMode==1){//gta 
-            speedsArray[0] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*ForBackdirection*directionArray[0];
-            speedsArray[1] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*ForBackdirection*directionArray[1];
+            speedsArray[0] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*forBackdirection*directionArray[0];
+            speedsArray[1] = (xboxController.getRawAxis(XBOX_L_TRIGGER) - xboxController.getRawAxis(XBOX_R_TRIGGER))*forBackdirection*directionArray[1];
             if (xboxController.getRawAxis(XBOX_LEFT_X_AXIS)>0){
                 speedsArray[0] = speedsArray[1]*(1-xboxController.getRawAxis(XBOX_LEFT_X_AXIS));
             }
@@ -150,7 +150,7 @@ public class OI {
         }
 
         else if(controlMode==2){//arcade 
-            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*ForBackdirection;
+            speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*forBackdirection;
             speedsArray[1] = joyArray[0].getRawAxis(JOY_X);
         }
         return speedsArray;
@@ -181,7 +181,7 @@ public class OI {
      * @return Switches the driving direction of the robot
      */
     public void switchDirections() {
-        ForBackdirection = ForBackdirection*-1;
+        forBackdirection = forBackdirection*-1;
 
     }
 
@@ -189,7 +189,7 @@ public class OI {
      * @return returns the driving direction of the robot
      */
     public int getDirection() {
-        return ForBackdirection;
+        return forBackdirection;
 
     }
 
