@@ -83,11 +83,11 @@ public class CTREMagEncoder  {
         
         if (limitSwitch.get() && switchMode == 0){
             returnVal = true;
-            setCurrentPositionZero();
+            this.setCurrentPositionZero();
         }
         else if (!limitSwitch.get() && switchMode == 1){
             returnVal = true;
-            setCurrentPositionZero();
+            this.setCurrentPositionZero();
         }
         return returnVal;
     }
