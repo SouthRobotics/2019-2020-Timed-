@@ -62,6 +62,7 @@ public class DriveTrain {
         // }
         
         this.diffDrive = new DifferentialDrive(speedControllers[0], speedControllers[1]);//left, then right
+
         //////////////////END OF MOTORS AND CLASS SETUP//////////////////////
     }
 

@@ -7,14 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Arduino.PixyCam;
+import frc.robot.Auto.*;
 import frc.robot.SpecificFunctions.*;
-
-//import com.ctre.phoenix.sensors.CANCoder;
-//import com.ctre.phoenix.sensors.CANCoderConfiguration;
 
 
 /**
@@ -32,11 +31,12 @@ public class Robot extends TimedRobot {
 
   private OI oi;
   private DriveTrain driveTrain;
-  private Intake intake;
+  //private Intake intake;
   private Outtake outtake;
 
+  private WPI_TalonSRX a,b,c;
 
-  private boolean camera = false;
+  Auto auto;
 
   //private PixyCam pixy;
   //CANCoder e = new CANCoder(15);
@@ -55,11 +55,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     oi = new OI(new int[]{0,1}, 0, OI.TANKDRIVE);
-    driveTrain = new DriveTrain(new int[]{31, 2, 1}, new int[]{13,14,12}, oi, 1);
-    intake = new Intake(new int[]{3}, new int[]{5});
-    outtake = new Outtake(3, -.3, oi, 5, 0);
+    driveTrain = new DriveTrain(new int[]{3,5,4}, new int[]{0,1,2}, oi, 1);
+   // intake = new Intake(new int[]{3}, new int[]{5});
+    //outtake = new Outtake(3, -.3, oi, 5, 0);
     
-    //pixy = new PixyCam(9600, 0, 1);
+    //a = new WPI_TalonSRX(6);
+    //b = new WPI_TalonSRX(1);
+  //  c = new WPI_TalonSRX(2);
+
+    auto = new Auto();
   }
 
   /**
@@ -72,6 +76,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
   }
 
   /**
@@ -90,6 +95,8 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+
+
   }
 
   /**
@@ -114,6 +121,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    if(oi.getJoysticks()[0].getRawButtonReleased(5))
+    
+      oi.switchDirections();
     driveTrain.moveMotors();
     //intake.intakePeriodic();
     //outtake.outTakePeriodic();
@@ -124,6 +134,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-
+    //a.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
+    //b.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
+    //c.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
   }
 }
