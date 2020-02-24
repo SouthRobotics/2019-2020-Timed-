@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public abstract class AutoProcess {
 
-    private boolean state;
-    private Timer timeElapsed;
+    protected boolean state;
+    protected Timer timeElapsed;
 
     /**
      * Call every loop cycle to execute task
