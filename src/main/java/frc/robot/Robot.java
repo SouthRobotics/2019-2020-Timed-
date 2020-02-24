@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
     //b = new WPI_TalonSRX(1);
   //  c = new WPI_TalonSRX(2);
 
-    auto = new Auto();
+   // auto = new Auto();
   }
 
   /**

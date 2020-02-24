@@ -16,11 +16,13 @@ package frc.robot.Auto;
  */
 public class Auto {
 
+    private AutoProcess[] tasks;
+    private int currentProcess;
 
-
-    public Auto()
+    public Auto(AutoProcess[] toDo)
     {
-
+        currentProcess = 0;
+        tasks = toDo;
     }
 
     /**
