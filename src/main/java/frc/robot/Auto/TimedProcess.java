@@ -19,18 +19,25 @@ public abstract class TimedProcess extends AutoProcess {
     /**
      * Starts the process
      */
-    public abstract void start();
+    public void start(){
+        timeElapsed.start();
+        state = true;
+    }
 
     /**
      * Ends the process
      */
-    public abstract void stop();
+    public void stop(){
+        timeElapsed.stop();
+        state = false;
+    }
 
     /**
      * Resets the function to its original state before it was originally called
      */
-    public abstract void reset();
-
+    public void reset(){
+        timeElapsed.reset();
+    }
 
     public void timerPeriodic(){
             if (super.getTimeElapsedSinceStart() > timeToExecute){
