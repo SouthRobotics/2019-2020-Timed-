@@ -26,8 +26,8 @@ public class CTREMagEncoder  {
     private DigitalInput limitSwitch;
     private int switchMode;
     private WPI_TalonSRX motorAssigned;
-    public static final int NormallyOpenLimitSwitch = 0;
-    public static final int NormallyClosedLimitSwitch = 1;
+    public static final int NORMALLYOPEN = 0;
+    public static final int NORMALLYCLOSED = 1;
     
 
 
