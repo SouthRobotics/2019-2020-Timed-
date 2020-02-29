@@ -54,8 +54,31 @@ public class Auto {
         currentProcess = index;
     }
 
+    /**
+     * Resets the array
+     */
     public void reset()
     {
+        tasks[currentProcess].stop();
+        for(int i = 0; i < tasks.length; i++)
+            tasks[i].reset();
+        
         currentProcess = 0;
+    }
+
+    /**
+     * Starts running the processes in the order from the index of the current process. Will continue where it left off if the Auto was stopped using stop()
+     */
+    public void start()
+    {
+        tasks[currentProcess].start();
+    }
+
+    /**
+     * Stops the current process from running. Call start() to continue
+     */
+    public void stop()
+    {
+        tasks[currentProcess].stop();
     }
 }
