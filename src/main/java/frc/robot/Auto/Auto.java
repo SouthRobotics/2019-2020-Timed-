@@ -32,8 +32,8 @@ public class Auto {
     {
         int currentProcess = 0;
         do{
-            tasks[currentProcess].processPeriodic();
-            if(!tasks[currentProcess].getState())
+  
+            if(!tasks[currentProcess].processPeriodic())
                 currentProcess++;
         }while(currentProcess < tasks.length);
     }

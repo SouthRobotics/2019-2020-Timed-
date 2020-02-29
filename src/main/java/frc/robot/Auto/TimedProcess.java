@@ -12,12 +12,8 @@ public abstract class TimedProcess extends AutoProcess {
 
     private double timeToExecute;
 
-    public TimedProcess(double time){
-        timeToExecute = time;
-    }
-
     /**
-     * Starts the process
+     * Starts the process, or resumes if it was previously stopped
      */
     public void start(){
         timeElapsed.start();
@@ -39,10 +35,23 @@ public abstract class TimedProcess extends AutoProcess {
         timeElapsed.reset();
     }
 
-    public void timerPeriodic(){
-            if (super.getTimeElapsedSinceStart() > timeToExecute){
-                stop();
-            }
+    public boolean processPeriodic()
+    {
+        if(timeElapsed.get() >= timeToExecute)
+        {
+            this.stop();
+        }
+        else
+        {
+            state = true;
+            timerPeriodic();
+        }
 
-    }  
+        return state;
+    }
+
+    /**
+     * Call this periodically for what you want to run when the timer is active
+     */
+    public abstract void timerPeriodic(); 
 }
