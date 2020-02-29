@@ -7,44 +7,42 @@
 
 package frc.robot.Auto;
 
-import edu.wpi.first.wpilibj.Timer;
 
-/**
- * Add your docs here.
- */
-public abstract class AutoProcess {
+public abstract class TimedProcess extends AutoProcess {
 
-    protected boolean state;
-    protected Timer timeElapsed;
+    private double timeToExecute;
 
-    /**
-     * Call every loop cycle to execute task
-     * @return true if the task is running, false if the task is finished
-     */
-    public abstract boolean processPeriodic();
+    public TimedProcess(double time){
+        timeToExecute = time;
+    }
 
     /**
      * Starts the process
      */
-    public abstract void start();
+    public void start(){
+        timeElapsed.start();
+        state = true;
+    }
 
     /**
      * Ends the process
      */
-    public abstract void stop();
+    public void stop(){
+        timeElapsed.stop();
+        state = false;
+    }
 
     /**
      * Resets the function to its original state before it was originally called
      */
-    public abstract void reset();
-
-    /**
-     * Gets the time since the process started to run
-     * @return Time elapsed in seconds
-     */
-    public double getTimeElapsedSinceStart()
-    {
-        return timeElapsed.get();
+    public void reset(){
+        timeElapsed.reset();
     }
 
+    public void timerPeriodic(){
+            if (super.getTimeElapsedSinceStart() > timeToExecute){
+                stop();
+            }
+
+    }  
 }
