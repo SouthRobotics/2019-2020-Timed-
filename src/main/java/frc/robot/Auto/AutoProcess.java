@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public abstract class AutoProcess {
 
-    protected boolean state;
+    protected boolean state = false;
     protected Timer timeElapsed;
 
     /**
