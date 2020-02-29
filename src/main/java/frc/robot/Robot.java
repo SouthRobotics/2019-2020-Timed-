@@ -16,6 +16,8 @@ import frc.robot.Auto.*;
 import frc.robot.SpecificFunctions.*;
 
 
+
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -33,10 +35,11 @@ public class Robot extends TimedRobot {
   private DriveTrain driveTrain;
   //private Intake intake;
   private Outtake outtake;
+  private Camera camera;
 
   private WPI_TalonSRX a,b,c;
 
-  Auto auto;
+  private Auto auto;
 
   //private PixyCam pixy;
   //CANCoder e = new CANCoder(15);
@@ -57,9 +60,9 @@ public class Robot extends TimedRobot {
     oi = new OI(new int[]{0,1}, 0, OI.TANKDRIVE);
     driveTrain = new DriveTrain(new int[]{3,5,4}, new int[]{0,1,2}, oi, 1);
    // intake = new Intake(new int[]{3}, new int[]{5});
-    //outtake = new Outtake(3, -.3, oi, 5, 0);
-    
-    //a = new WPI_TalonSRX(6);
+    outtake = new Outtake(6, -.3, oi, 5, 0);
+    camera = new Camera();
+   // a = new WPI_TalonSRX(6);
     //b = new WPI_TalonSRX(1);
   //  c = new WPI_TalonSRX(2);
 
@@ -122,11 +125,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if(oi.getJoysticks()[0].getRawButtonReleased(5))
-    
       oi.switchDirections();
-    driveTrain.moveMotors();
+   // driveTrain.moveMotors();
+   driveTrain.moveMotors(0, 0, false);
     //intake.intakePeriodic();
-    //outtake.outTakePeriodic();
+    outtake.outTakePeriodic();
   }
 
   /**
@@ -134,8 +137,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    //a.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
-    //b.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
-    //c.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
+    if(oi.getJoysticks()[0].getRawButtonReleased(5))
+      camera.toggleCrosshairs();
   }
 }
