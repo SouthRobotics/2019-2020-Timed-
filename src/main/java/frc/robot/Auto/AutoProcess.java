@@ -47,4 +47,9 @@ public abstract class AutoProcess {
         return timeElapsed.get();
     }
 
+    public boolean getState()
+    {
+        return state;
+    }
+
 }

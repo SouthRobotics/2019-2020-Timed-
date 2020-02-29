@@ -8,7 +8,8 @@
 package frc.robot.Auto;
 
 /**
- * Auto is used for handling all events that fall under the Automatic period of the competition (2020 competition).
+ * Auto is used for handling all events that fall under the Automatic period of
+ * the competition (2020 competition).
  * 
  *
  * 
@@ -19,9 +20,8 @@ public class Auto {
     private AutoProcess[] tasks;
     private int currentProcess;
 
-    public Auto(AutoProcess[] toDo)
-    {
-        currentProcess = 0;
+    public Auto(AutoProcess[] toDo) {
+        setCurrentProcess(0);
         tasks = toDo;
     }
 
@@ -30,6 +30,32 @@ public class Auto {
      */
     public void autoPeriodic()
     {
+        int currentProcess = 0;
+        do{
+            tasks[currentProcess].processPeriodic();
+            if(!tasks[currentProcess].getState())
+                currentProcess++;
+        }while(currentProcess < tasks.length);
+    }
 
+    /**
+     * 
+     * @return The index of the current process
+     */
+    public int getCurrentProcess() {
+        return currentProcess;
+    }
+
+    /**
+     * 
+     * @param index The index of the process on which to run when autoPeriodic() is called. This will still call the rest of the functions after the new process finishes.
+     */
+    public void setCurrentProcess(int index) {
+        currentProcess = index;
+    }
+
+    public void reset()
+    {
+        currentProcess = 0;
     }
 }
