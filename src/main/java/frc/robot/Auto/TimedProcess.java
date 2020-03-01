@@ -36,13 +36,21 @@ public abstract class TimedProcess extends AutoProcess {
      * Resets the function to its original state before it was originally called
      */
     public void reset(){
+        stop();
         timeElapsed.reset();
     }
 
-    public void timerPeriodic(){
-            if (super.getTimeElapsedSinceStart() > timeToExecute){
-                stop();
-            }
+    public abstract void timerPeriodic();
 
-    }  
+    
+    public boolean processPeriodic(){
+            if(super.getTimeElapsedSinceStart() < timeToExecute){
+                timerPeriodic();
+                return true;
+            }
+            else{
+                stop();
+                return false;
+            }
+    }
 }
