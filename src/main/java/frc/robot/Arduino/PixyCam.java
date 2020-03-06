@@ -164,4 +164,13 @@ public class PixyCam {
             tilt.setPosition(t);
         }
     }
+
+    /**
+     * Used to check if the Pixy (and arduino) are connected
+     * @return
+     */
+    public boolean isConnected()
+    {
+        return arduino.isConnected;
+    }
 }

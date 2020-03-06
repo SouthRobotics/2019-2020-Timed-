@@ -10,6 +10,7 @@ package frc.robot.SpecificFunctions;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.OI;
 import frc.robot.Arduino.*;
 
 /**
@@ -26,6 +27,9 @@ public class Intake {
     private double multiplier;
     private double timeOut;
     private double width, height;
+    private OI oi;
+    private int joyindex = -1, button = -1;
+    private boolean isOn = false;
 
     public static final double DEFAULT_MIN_HEIGHT = .5;
     public static final double DEFAULT_MIN_WIDTH = .5;
@@ -123,15 +127,61 @@ public class Intake {
 
     /**
      * This method should be used in a loop when the intake is deisred to be used
-     * This will check if there is an object that meets the required size, and if there is then it will turn the motors on for a set ammount of time
+     * This will check if there is an object that meets the required size, and if there is then it will turn the motors on for a set amount of time
+     * If there is a backup button, then it will go because of the button being pressed.
      * 
      * @return Returns true if the intake is currently on, and false if the intake is currently off
      */
 
     public boolean intakePeriodic()
     {
-        double[] blocks = pixy.getBlocks();
-        if(blocks[2] >= width && blocks[3] >= height)
+        double[] blocks = null;
+
+        if(oi != null && !pixy.isConnected())
+        {
+
+            if(oi.getButton(button)[joyindex])
+            {
+                timer.reset();
+                timer.start();
+                isOn = true;
+            }
+
+            if(timer.get() > timeOut)
+                isOn = false;
+
+            if(timer.get() > timeOut || !isOn)
+            {
+                timer.stop();
+                timer.reset();
+
+                for(int i = 0; i < intakeMotors.length; i++)
+                    intakeMotors[i].set(0);
+                
+                for(int i = 0; i < conveyerMotors.length; i++)
+                    conveyerMotors[i].set(0);
+                return false;
+            }
+            else if(timer.get() > 0)
+            {
+                for(int i = 0; i < intakeMotors.length; i++)
+                {
+                    intakeMotors[i].set(multipliers[i] * multiplier);
+                }
+        
+                for(int i = 0; i < conveyerMotors.length; i++)
+                    conveyerMotors[i].set(multipliers[i + intakeMotors.length] * multiplier);
+                return true;
+            }
+
+
+        }
+        else
+        {
+            blocks = pixy.getBlocks();    
+        }
+
+        if(blocks != null && blocks[2] >= width && blocks[3] >= height)
         {
 
             for(int i = 0; i < intakeMotors.length; i++)
@@ -158,5 +208,31 @@ public class Intake {
         else
             return true;
         
+    }
+
+    /**
+     * In case there is an error with the PIXY, this button will be used as backup for the intake.
+     * 
+     * @param inputs The OI that the robot uses
+     * @param JoystickIndex The index of the desired controller in the OI object
+     * @param buttonNumber Button number to be checked
+     */
+    public void setBackupButtons(OI inputs, int JoystickIndex, int buttonNumber)
+    {
+        oi = inputs;
+        joyindex = JoystickIndex;
+        button = buttonNumber;
+    }
+
+    public void stop()
+    {
+        timer.stop();
+        timer.reset();
+
+        for(int i = 0; i < intakeMotors.length; i++)
+            intakeMotors[i].set(0);
+        
+        for(int i = 0; i < conveyerMotors.length; i++)
+            conveyerMotors[i].set(0);
     }
 }

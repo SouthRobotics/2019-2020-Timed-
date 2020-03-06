@@ -9,7 +9,6 @@ package frc.robot.Auto;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.CTREMagEncoder;
 import frc.robot.DriveTrain;
 
