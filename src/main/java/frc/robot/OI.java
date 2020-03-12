@@ -153,6 +153,11 @@ public class OI {
             speedsArray[0] = joyArray[0].getRawAxis(JOY_Y)*forBackdirection;
             speedsArray[1] = joyArray[0].getRawAxis(JOY_X);
         }
+        if(forBackdirection == -1){
+            double temp = speedsArray[0];
+            speedsArray[0] = speedsArray[1];
+            speedsArray[1] = temp;
+        }
         return speedsArray;
     }
 
