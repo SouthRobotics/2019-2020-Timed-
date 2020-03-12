@@ -71,16 +71,17 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     oi = new OI(new int[]{0,1}, 0, OI.TANKDRIVE);
-    driveTrain = new DriveTrain(new int[]{3,4,10}, new int[]{0,1,2}, oi, 1);
-    intake = new Intake(new int[]{7}, new int[]{8});
+    oi.setDriveStraightButton(3, 0);
+    driveTrain = new DriveTrain(new int[]{0,1,2}, new int[]{3,4,5}, oi, -1);
+    intake = new Intake(new int[]{10}, new int[]{9});
     intake.setBackupButtons(oi, 0, 4);
-    outtake = new Outtake(6, -.3, oi, 5, 0);
+    outtake = new Outtake(10, -.4, oi, 5, 0);
     d0 = new DigitalOutput(1);
     lift = new OuttakeLift(0);
     ballSystem = new BallSystem(intake, outtake, lift);
    // camera = new Camera();
-   // a = new WPI_TalonSRX(6);
-    //b = new WPI_TalonSRX(1);
+    a = new WPI_TalonSRX(6);
+    b = new WPI_TalonSRX(11);
   //  c = new WPI_TalonSRX(2);
     //p0 = new PWM(0);
    // auto = new Auto();
@@ -164,9 +165,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    //if(oi.getJoysticks()[0].getTriggerReleased())
-    //  camera.toggleCrosshairs();
-    driveTrain.moveMotors();
+    driveTrain.moveMotors(0, 0, false);
+    //driveTrain.moveMotors();
     ballSystem.ballSystemPeriodic();
+    if(oi.getJoysticks()[0].getTriggerReleased())
+    {
+      oi.switchDirections();
+    }
+
+    a.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
+    b.set(oi.getJoysticks()[0].getRawAxis(OI.JOY_Y));
   }
 }

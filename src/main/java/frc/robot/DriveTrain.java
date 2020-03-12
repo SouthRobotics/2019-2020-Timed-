@@ -15,7 +15,7 @@ public class DriveTrain {
     //public static final boolean SWAP_RIGHT_LEFT_WHEEL_SIDES = false;/*Code to swap left and right 1/2*/
 
     //should the speeds inputted into the tankDrive be squared? this may smoothen speed or something
-    public static final boolean SQUARE_SPEEDS = false;    
+    public static final boolean SQUARE_SPEEDS = true;    
     public static final int NUMBER_OF_SPEED_CONTROLLERS = 2;
 
     private boolean moveEnabled = true;//can the drivetrain move at all? default is true

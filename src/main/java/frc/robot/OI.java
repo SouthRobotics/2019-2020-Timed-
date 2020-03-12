@@ -126,7 +126,7 @@ public class OI {
     public double[] getSpeeds(){
         double[] speedsArray = new double[2];
         if(controlMode==0){ //Dual Joy
-            if (driveStraightButton != -100 && driveStraightController != -1){
+            if (driveStraightController != -1 && joyArray[driveStraightController].getRawButton(driveStraightButton)){
                 for(int i=0;i<speedsArray.length;i++){
                     speedsArray[i] = joyArray[driveStraightController].getRawAxis(JOY_Y)*forBackdirection*directionArray[i];
                 }

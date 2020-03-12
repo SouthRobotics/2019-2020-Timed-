@@ -30,6 +30,7 @@ public class Intake {
     private OI oi;
     private int joyindex = -1, button = -1;
     private boolean isOn = false;
+    private boolean paused = false;
 
     public static final double DEFAULT_MIN_HEIGHT = .5;
     public static final double DEFAULT_MIN_WIDTH = .5;
@@ -137,6 +138,12 @@ public class Intake {
     {
         double[] blocks = null;
 
+        if(paused == true)
+        {
+            timer.start();
+            paused = false;
+        }
+
         if(oi != null && !pixy.isConnected())
         {
 
@@ -228,6 +235,18 @@ public class Intake {
     {
         timer.stop();
         timer.reset();
+
+        for(int i = 0; i < intakeMotors.length; i++)
+            intakeMotors[i].set(0);
+        
+        for(int i = 0; i < conveyerMotors.length; i++)
+            conveyerMotors[i].set(0);
+    }
+
+    public void pause()
+    {
+        timer.stop();
+        paused = true;
 
         for(int i = 0; i < intakeMotors.length; i++)
             intakeMotors[i].set(0);
